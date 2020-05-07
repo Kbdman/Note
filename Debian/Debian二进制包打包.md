@@ -4,13 +4,14 @@
 + 在项目目录中新建一个DEBIAN文件夹
 + 在DEBIAN文件夹下新建一个control文件，在里面填入相应的信息
 + 在DEBIAN目录下生成md5sums文件
-+ 试用  
-    回到上层目录
-    使用   dpkg-deb -b 目录名 包名  生成deb包
+
++ 回到上层目录
+使用   dpkg-deb -b 目录名 包名  生成deb包
  
 + 解包
  dpkg-deb -R 包名
  
 + 安装dpkg -i
+
 
 
