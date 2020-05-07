@@ -50,3 +50,17 @@ rules文件可以像makefile文件一样使用。
 
 ### lintian
 lintian是一个从Debian Policy创建出的检查器
+
+
+### 制作生成多个包的包
+
+debmake -b ',pa1,pa2' 在生成模板时指定生成多个包的模板，pa1,pa2为其他包的包名
+在生成的debian/下编辑pa1.install pa2.install来设定包的安装
+
+
+### install文件格式
+>源文件 目标目录
+源文件可以用*之类的匹配，符合规则的将会被打包到目标目录下
+如果只有源文件，则表示当前包包含这些文件，目标目录和源文件的目录一致
+
+>如果是CMake进行配置的包，源文件应该从CMakeList.txt里设置的安装目录去匹配.具体的路径，可以查看CMake生成的install_manifest
