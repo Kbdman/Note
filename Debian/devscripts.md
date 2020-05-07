@@ -24,3 +24,11 @@ devscripts package 包含了很多帮助Debian开发者工作的工具
 
 ## uupdate 
 将新上游版本发布后，新版本包的创建自动化
+
+## dpkg-source
+
+“dpkg-source -x” 命令可以对 Debian 源码包进行解压缩。
+
+该命令通常会将 debian/patches/ 目录内的补丁应用在源码树中，并将补丁状态记录在 .pc/ 目录中。
+
+如果您想保持源码树不做修改（例如，为了在 第 5.13 节 “在版本控制系统中进行记录（标准）” 中继续使用），请在命令行中使用 --skip-patches 选项。

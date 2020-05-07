@@ -8,6 +8,7 @@
 生成debian目录，在目录下创建debian包所需的描述文件，包括control，changelog，copyright等
 >dh_make时会让选择参数 s/i/m之类的，singal binary,代表源码包生成的程序是一个单独的二进制包
 
+
 ## 按需编辑这些文件
 ### rules
 rules文件通常包含了一组用于在一个专用的子目录下配置，构建，安装软件的规则。这个目录中的内容会被打包在deb包中，就好象他是根目录一样。
@@ -19,6 +20,10 @@ rules文件可以像makefile文件一样使用。
 
 如将源码目录下的data/*放到usr/share中
 >data/* usr/share/ 
+
+也可以直接在debian下新建install文件来定义文件的安装
+
+对于makefile中没有涉及到的而又需要安装到目标系统的文件，可以通过install来设定
 
 ## 如果上源包有修改，试用dpkg-source --commit 将改动做成patch
 
