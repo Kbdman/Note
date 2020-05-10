@@ -1,37 +1,39 @@
 Always Preemptible and Always Interruptible
-06/16/2017
-3 minutes to read
+
+系统可抢占可中断的设计是为了最大化性能。任何线程都可以被更高优先级的线程抢占，而任何驱动的ISR都可以被运行在更高IRQL上的过程中断
  
-The goal of the preemptible, interruptible design of the operating system is to maximize system performance. Any thread can be preempted by a thread with a higher priority, and any driver's interrupt service routine (ISR) can be interrupted by a routine that runs at a higher interrupt request level (IRQL).
+内核组件根据下面的标准来决定一段代码什么时候执行：
++ 内核定义的线程运行时优先级方案        
+    系统中的每一个线程都有一个与之关联的优先级属性。
+    
+    通常大部分线程都有动态的优先级属性：它们总是可抢占的，并且和此时同样优先级的其他线程一起被调度着轮询执行。
+    
+    有些线程有实时的优先级属性：这些时间敏感的线程会运行到结束，除非他们被有更高实时优先级的线程给抢占。Ms Windows并不是一个真正的实时系统。
+    
+    无论是什么优先级的线程，在有硬件中断或者特定类型的软件中断出现时，都可以被抢占。
 
-The kernel component determines when a code sequence runs, according to one of these prioritizing criteria:
++ 内核给特定平台上的特定中断向量定义的IRQL      
+    内核优先处理硬件中断和软件中断，所以一些内核模式代码，包括大部分驱动，都运行在更高的IRQL上，这使得他们比系统中的其他线程有更高的调度优先级。一段内核模式代码执行的IRQL由相关下层设备的硬件优先级决定.
+    
+    内核模式代码总是可中断的：有更高IRQL的中断会随时出现，使得有更高IRQL的代码在当前处理器上立即执行.当有某一个IRQL的代码在执行时，内核会在该处理器上屏蔽所有相同或者更低IRQL的代码.
 
-The kernel-defined run-time priority scheme for threads.
+最低的IRQL是PASSIVE_LEVEL,在这个级别上，不屏蔽任何中断向量。线程通常都运行在PASSIVE_LEVEL上，更高一点的IRQL是为软件中断准备的，包括APC_LEVEL,DISPATCH_LEVEL,或者内核调试用的WAKE_LEVEL.设备中断有更高的IRQL.内核为系统关键的中断保留了最高的IRQL，比如系统时钟或者总线错误。
 
-Every thread in the system has an associated priority attribute. In general, most threads have variable priority attributes: they are always preemptible and are scheduled to run round-robin with all other threads that are currently at the same priority level. Some threads have real-time priority attributes: these time-critical threads run to completion unless they are preempted by a thread that has a higher real-time priority attribute. The Microsoft Windows architecture does not provide an inherently real-time system.
+一些系统支持过程运行在PASSIVE_LEVEL上，要么是因为他们被实现成可分页代码，或者访问可分页数据，又或者是因为一些内核模式组件设置了他们自己的线程.
 
-Whatever its priority attribute, any thread in the system can be preempted when hardware interrupts and certain types of software interrupts occur.
+类似的，一些标准驱动过程通常运行在PASSIVE_LEVEL上，然而一些标准驱动过程运行在DISPATCH_LEVEL上，而一些最底层驱动运行在设备IRQL(DIRQL)上.
 
-The kernel-defined interrupt request level (IRQL) to which a particular interrupt vector is assigned on a given platform.
+IRQL的更多信息见管理硬件优先级。https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/managing-hardware-priorities?redirectedfrom=MSDN
 
-The kernel prioritizes hardware and software interrupts so that some kernel-mode code, including most drivers, runs at higher IRQLs, thereby making it have a higher scheduling priority than other threads in the system. The particular IRQL at which a piece of kernel-mode driver code executes is determined by the hardware priority of its underlying device.
 
-Kernel-mode code is always interruptible: an interrupt with a higher IRQL value can occur at any time, thereby causing another piece of kernel-mode code that has a higher system-assigned IRQL to be run immediately on that processor. However, when a piece of code runs at a given IRQL, the kernel masks all interrupt vectors with a lesser or equal IRQL value on the processor.
+驱动中的每个过程都是可中断的。这包括了那些运行在比PASSIVE_LEVEL更高的IRQL的过程。除非有更高IRQL的中断出现，任何运行在某一IRQL的过程在运行时都会保持着对处理器的控制。
 
-The lowest IRQL level is called PASSIVE_LEVEL. At this level, no interrupt vectors are masked. Threads generally run at IRQL=PASSIVE_LEVEL. The next higher IRQL levels are for software interrupts. These levels include APC_LEVEL, DISPATCH_LEVEL or, for kernel debugging, WAKE_LEVEL. Device interrupts have still higher IRQL values. The kernel reserves the highest IRQL values for system-critical interrupts, such as those from the system clock or bus errors.
+不像一些老的个人电脑OS，MS Windows驱动的ISR 从来不会是一个完成驱动的I/O处理的大部分工作的巨大复杂的过程。这是因为任何驱动的ISR都可能被跟高IRQL的过程中断。因此驱动的ISR不需要保持着对CPU的控制不可中断地从开始执行到结束
 
-Some system support routines run at IRQL=PASSIVE_LEVEL, either because they are implemented as pageable code or access pageable data, or because some kernel-mode components set up their own threads.
+在Windows驱动中，ISR通常保存下设备的硬件状态信息，排队一个DPC,然后就快速退出。然后系统将驱动的DPC取出好让驱动在DISPATCH_LEVEL完成I/O操作。为了总体的系统性能，运行在高IRQL的所有过程都必须快速的释放掉对CPU的控制。
 
-Similarly, some standard driver routines usually run at IRQL=PASSIVE_LEVEL. However, several standard driver routines run either at IRQL=DISPATCH_LEVEL or, for a lowest-level driver, at device IRQL (also called DIRQL). For more information about IRQLs, see Managing Hardware Priorities.
+在 Windows中，所有的线程都有一个线程上下文。这个上下文包含了，引用线程的进程的ID,加上一些其他属性，比如线程的访问权限。
 
-Every routine in a driver is interruptible. This includes any routine that is running at a higher IRQL than PASSIVE_LEVEL. Any routine that is running at a particular IRQL retains control of the processor only if no interrupt for a higher IRQL occurs while that routine is running.
+通常只有最高层的驱动是在发起当前I/O请求的线程的上下文中。而中间层驱动和下层驱动永远不能假设自己是运行在发起请求的线程的上下文中。
+可以说驱动过程通常运行在一个透明的线程上下文中。出于性能的考虑，避免上下文切换，只有很少的驱动设置了他们自己的线程
 
-Unlike the drivers in some older personal computer operating systems, a Microsoft Windows driver's ISR is never a large, complex routine that does most of the driver's I/O processing. This is because any driver's interrupt service routine (ISR) can be interrupted by another routine (for example, by another driver's ISR) that runs at a higher IRQL. Thus, the driver's ISR does not necessarily retain control of a CPU, uninterrupted, from the beginning of its execution path to the end.
-
-In Windows drivers, an ISR typically saves hardware state information, queues a deferred procedure call (DPC), and then quickly exits. Later, the system dequeues the driver's DPC so that the driver can complete I/O operations at a lower IRQL (DISPATCH_LEVEL). For good overall system performance, all routines that run at high IRQLs must relinquish control of the CPU quickly.
-
-In Windows, all threads have a thread context. This context consists of information that identifies the process that owns the thread, plus other characteristics such as the thread's access rights.
-
-In general, only a highest-level driver is called in the context of the thread that is requesting the driver's current I/O operation. An intermediate-level or lowest-level driver can never assume that it is executing in the context of the thread that requested its current I/O operation.
-
-Consequently, driver routines usually execute in an arbitrary thread context—the context of whatever thread is current when a standard driver routine is called. For performance reasons (to avoid context switches), very few drivers set up their own threads.
