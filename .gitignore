@@ -1,3 +1,12 @@
 cpp/cpptest/*
 .vscode/*
 build/*
+*.mod.c
+*.o.cmd
+*.ko.cmd
+*.ko
+*.o
+linux_kernel/code_example/Module.symvers
+linux_kernel/code_example/modules.order
+linux_kernel/code_example/test
+linux_kernel/code_example/.tmp_versions/chardev.mod
