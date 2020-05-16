@@ -11,6 +11,7 @@ FS[0x18] TEB地址
 FS[0x30] PEB
 
 ### 64位
+GS指向TEB
 #### PEB
 + 0x000 InheritedAddressSpace : UChar
 + 0x001 ReadImageFileExecOptions : UChar
