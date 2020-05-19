@@ -380,3 +380,13 @@ ntdll!_NT_TIB
 + 0x020 Version          : Uint4B
 + 0x028 ArbitraryUserPointer : Ptr64 Void
 + 0x030 Self             : Ptr64 _NT_TIB
+
+## 反调试相关
++ PEB.BeingDebugged
+    在调试状态会为true, IsDebuggerPreset()检查该值
++ PEB.ldr       
+    ldr的内存在堆中,调试状态堆内存被初始化为0xFEEEFEEE,通过复写这些值为0隐藏
++ PEB.ProcessHeap->flag & PEB.ProcessHeap->forceflag 
+非调试状态下为2,0,调试状态下要隐藏可以设回去
++ PEB.NtGlobalFlag
+调试状态下为70，破解方法，设置0

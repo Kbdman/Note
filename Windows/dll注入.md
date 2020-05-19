@@ -66,3 +66,5 @@ HHOOK SetWindowsHookExA(
 6. 遍历更新导入表
 7. 更新重定位数据
 8. 调用oep 
+
+## 修改文件IAT
