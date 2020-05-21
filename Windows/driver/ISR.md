@@ -1,0 +1,15 @@
+# Interrupt Service Routines
+接收中断的物理设备的驱动通常会注册一个或者多个中断服务过程来处理中断.系统回会为它收到的每个中断调用ISR.
+
+PCI2.2前的总线和端口设备会生成线路中断，设备通过将一个电信号发送到特定的引线产生的中断成为线路中断.Vista之前的Windows只支持线路中断
+
+从PIC2.2开始,PCI设备可以产生Message-signaled中断.设备通过将一个数据写道特定的地址来产生一个messaged-signaled中断。Vista以及之后的Windows支持线路中断和MessageSignaled中断
+系统支持两种不同的ISR：
++ 驱动可以注册一个 InterruptService过程来处理限流中断或者messagesignaled中断.系统传递一个驱动提供的上下文
++ 驱动可以注册一个InterruptMessageService来处理message-signaled中断。系统会传递驱动提供的上下文值，以及中断消息的消息ID。
+
+注册InterruptService或者InterruptMessageService过程处理设备中断的更多信息见 https://docs.microsoft.com/windows-hardware/drivers/kernel/introduction-to-message-signaled-interrupts
+
+## 与ISR共享数据
+1. 驱动过程调用KeSynchronizeExcute，执行CriticalSetion代码
+2. 获取中断对象持有的SPIN_LOCK
