@@ -11,5 +11,5 @@ PCI2.2前的总线和端口设备会生成线路中断，设备通过将一个�
 注册InterruptService或者InterruptMessageService过程处理设备中断的更多信息见 https://docs.microsoft.com/windows-hardware/drivers/kernel/introduction-to-message-signaled-interrupts
 
 ## 与ISR共享数据
-1. 驱动过程调用KeSynchronizeExcute，执行CriticalSetion代码
+1. 驱动过程调用KeSynchronizeExcute，执行CriticalSection代码
 2. 获取中断对象持有的SPIN_LOCK
