@@ -1,0 +1,17 @@
+# 注册和排队CustomDpc
+在创建设备对象后，驱动通过调用KeInitializeDpc来为设备对象注册一个CustomDpc.驱动可以在AddDevice过程或者处理IRP_MN_START_DEVICE的DispatchPnp过程中进行注册。
+
+只有在驱动的ISR即将返回前，它可以调用KeInsertQueueDpc来将CustomDpc排入执行队列。
+
+
+![](https://docs.microsoft.com/zh-cn/windows-hardware/drivers/kernel/images/3cstmdpc.png)
+
+有CustomDPc的驱动必须为一个DPC对象提供存储。由于驱动必须在ISR中传递一个DPC对象的指针，DPC对象的存储必须是锁定在物理内存中系统空间内存。虽然大部分由CustomDpc的驱动都将DPC对象放在它们的设备拓展中，存储也可以来自于控制器对象的控制器拓展，以及非分页池。
+
+当驱动调用KeInitializeDpc时，必须传递CustomDpc的地址以及Dpc对象指针和一个驱动定义的上下文区域。这些会在CustomDPc被调用时传递给CustomDpc.因此这些去必须在DISPATCH_LEVEL上可访问，并且必须在锁定在物理内存中。
+
+不像DpcForIsr,CustomDpc和设备对象没有关联。尽管如此，驱动通常都将了目标设备对象的指针和当前IRP的指针保存在上下文信息中提供给CustomDpc.就像DpcForIsr一样，CustomDpc使用这些信息来在低于ISR的IRQL中 完成中断驱动古的i/o操作
+
+在一个时刻只有一个DPC对象可以被排入队列。尽管一个ISR可以在CustomDpc被调用前以一个DPC对象多次调用KeInsertQueueDpc，在处理下掉下DISPATCH——LEVEL后，CustomDPc只会执行一次
+
+由于CustomDpc可能和ISR在对称多处理器平台上同时运行，所以也要准售DpcForIsr所要遵循的规则
