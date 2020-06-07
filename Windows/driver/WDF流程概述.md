@@ -1,5 +1,5 @@
 # WDF 流程概述
-## 入口函數
+## 入口
 DriverEntry入口，主要工作:
 + 创建一个WDF_DRIVER_CONFIG
 + 使用WDF_DRIVER_CONFIG_INIT设置EvtDriverDeviceAdd回调，相当于WDM中的AddDevice
