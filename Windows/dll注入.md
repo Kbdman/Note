@@ -27,7 +27,7 @@ APC是与线程相关的，执行在线程的上下文中， 当一个线程被�
 ## 通过shellcode注入DLL
 1. 写好一个shellcode,shellcode里调用loadlibrary加载目标动态库，然后跳转回原地址     
 在编写shellcode时动态库名称地址，loadlibrary地址以及跳转回的源地址都不确定，可以先随便用个地址占位，后期在确定地址后，在动态的修改
-2. OpenProcess目标进程，virtualAllocEx在目标进程中申请两块空间，一块用于存放动态库名字，一块用于村妇shellcode
+2. OpenProcess目标进程，virtualAllocEx在目标进程中申请两块空间，一块用于存放动态库名字，一块用于存放shellcode
 3. 将动态库地址写入目标进程
 4. 通过快照找到一个目标进程的线程，OpenThread打开目标线程,suspendThread暂停目标线程.
 5. 通过GetProcAddress获取LoadLibrary的地址
