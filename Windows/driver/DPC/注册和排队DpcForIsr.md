@@ -1,4 +1,4 @@
-#注册和排队DpcForIsr
+# 注册和排队DpcForIsr
 驱动通过在创建设备对象后调用IoInitializeDpcRequest来为设备对象注册DpcForIsr.驱动可以在它的AddDevice过程或者处理IRP_MN_START_DEVICE的DispatchPnp中注册DpcForIsr.
 
 驱动的ISR在它返回前调用IoRequestDpc来讲一个DpcForIsr过程排入队列。

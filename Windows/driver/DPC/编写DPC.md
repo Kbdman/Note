@@ -15,7 +15,7 @@ For more information about using PIO, see Using Direct I/O.
 
 + If a non-WDM driver has a ControllerControl routine, call IoFreeController when a requested operation is complete.
 
-注意DpcForIsr或者customerDpc过程通常要处理设备I/O的大部分操作来曼珠IRP。这些过程要负责将IRP排队到设备对应驱动的分发过程中
+注意DpcForIsr或者customerDpc过程通常要处理设备I/O的大部分操作来满足IRP。这些过程要负责将IRP排队到设备对应驱动的分发过程中
 
 考虑遵循下列设计规则：
 + Dpc过程应在安全的情况下应当尽可能快的调用IoStartNextPacket.安全的状况指，不会造成资源冲突或者和StartIo过程产生竞争状态

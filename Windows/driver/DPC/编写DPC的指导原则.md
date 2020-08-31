@@ -1,7 +1,7 @@
 # DPC过程设计指导原则
 
 + Dpc过程必须和驱动的其他过程同步它们对物理设备以及驱动维护的共享状态共享资源的访问     
-如果一个DPC或称要和ISR访问数据，那么必须使用KeSynchronizeExection来调用SyncCritSection来访问。      
+如果一个DPC过程要和ISR访问数据，那么必须使用KeSynchronizeExection来调用SyncCritSection来访问。      
 如果DPC与不是ISR的过程共享数据，必须使用一个驱动提供的SPINLOCK来保护数据
 
 + DPc过程执行在Dispatch_LEVEL上，这限制了它可以调用的支持过程。例如它们不可以访问或者申请分页内存，不可以等待内核对象。不过它们可以用KeAcquireSpinLockAtDpc和KeRelaseSpinLockForkDpcLevel,这些比KeAcurireSpinLock和KeReleaseSpinlock快些        
