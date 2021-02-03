@@ -6,6 +6,7 @@ build/*
 *.ko.cmd
 *.ko
 *.o
+*.out
 linux_kernel/code_example/Module.symvers
 linux_kernel/code_example/modules.order
 linux_kernel/code_example/test
