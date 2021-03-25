@@ -1,0 +1,5 @@
+## Compatible ID
+兼容ID是厂商定义的标识字符串，Windows用它来进行设备与INF文件间的匹配。一个设备可以与一组兼容ID关联。兼容ID应当按照适配性的递减顺序排列。如果Windows无法为设备找到一个与之任何一个硬件ID匹配的INF文件，则它会使用兼容ID来匹配INF文件。兼容ID与硬件ID格式一样。兼容ID通常比硬件ID更加通用     
+如果一个厂商发布了一个INF文件，其中为一个驱动节点指定了一个兼容ID,厂商应该确保他们的INF文件应当支持所有与该兼容ID匹配的硬件
+
+要获取兼容ID，可以以DevicePropertyCompatibleID为参数调用IoGetDeviceProperty
