@@ -34,3 +34,9 @@ LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &tp.Privileges[0].Luid);
 AdjustTokenPrivileges(hToken, FALSE, &tp, 0, NULL, NULL) ;
 
 ```
+
+## 通过Process Monitor获取由依赖库不满足导致的loadlibrary失败原因的方法
+LoadLibrary时，进程会打开被加载的动态库，再依次打开被加载的动态库依赖的动态库，如果存在找不到依赖，则LoadLibrary失败。
+通过Process Monitor跟踪进程LoadLibrary返回前最后的几个打开动态库文件失败的记录，就可以得知无法满足的依赖
+
+
