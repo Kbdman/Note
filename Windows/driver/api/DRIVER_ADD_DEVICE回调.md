@@ -1,5 +1,5 @@
-## DRIVER_ADD_DEVICE »Øµ÷º¯Êı (wdm.h)
-AddDevice¹ı³Ì¸ºÔğÎªPnp¹ÜÀíÆ÷ÃÀ¾çµ½µÄÉè±¸´´½¨¹¦ÄÜÉè±¸¶ÔÏó»òÕß»òÕß¹ıÂËÉè±¸¶ÔÏó
+## DRIVER_ADD_DEVICE å›è°ƒå‡½æ•° (wdm.h)
+AddDeviceè¿‡ç¨‹è´Ÿè´£ä¸ºPnpç®¡ç†å™¨ç¾å‰§åˆ°çš„è®¾å¤‡åˆ›å»ºåŠŸèƒ½è®¾å¤‡å¯¹è±¡æˆ–è€…æˆ–è€…è¿‡æ»¤è®¾å¤‡å¯¹è±¡
 
 
 ```
@@ -11,22 +11,22 @@ NTSTATUS DriverAddDevice(
 )
 {...}
 ```
-### ²ÎÊı
+### å‚æ•°
 + DriverObject      
-µ÷ÓÃÕßÌá¹©µÄÇı¶¯¶ÔÏóÖ¸Õë£¬Ö¸ÕëÇı¶¯µÄÇı¶¯¶ÔÏó
+è°ƒç”¨è€…æä¾›çš„é©±åŠ¨å¯¹è±¡æŒ‡é’ˆï¼ŒæŒ‡é’ˆé©±åŠ¨çš„é©±åŠ¨å¯¹è±¡
 
 + PhysicalDeviceObject  
-µ÷ÓÃÕßÌá¹©µÄÓÉÏÂ²ãÇı¶¯´´½¨µÄ´ú±í×ÅPDOµÄÉè±¸¶ÔÏóÖ¸Õë
+è°ƒç”¨è€…æä¾›çš„ç”±ä¸‹å±‚é©±åŠ¨åˆ›å»ºçš„ä»£è¡¨ç€PDOçš„è®¾å¤‡å¯¹è±¡æŒ‡é’ˆ
 
 
-### ·µ»ØÖµ
-³É¹¦·µ»ØSTATUS_SUCCESS£¬·ñÔò±ØĞë·µ»ØNtstatus.hÖĞ¶¨ÒåµÄÒ»¸ö´íÎóÂë
+### è¿”å›å€¼
+æˆåŠŸè¿”å›STATUS_SUCCESSï¼Œå¦åˆ™å¿…é¡»è¿”å›Ntstatus.hä¸­å®šä¹‰çš„ä¸€ä¸ªé”™è¯¯ç 
 
-### ±¸×¢
-ËùÓĞÖ§³ÖPnPµÄÄÚºËÇı¶¯¶¼±ØĞëÌá¹©Ò»¸öAddDevice¹ı³Ì£¬²¢ÔÚDriverEntryÖĞ½«ÆäµØÖ·´æÈëDriverObject->DriverExtension->AddDevice.
+### å¤‡æ³¨
+æ‰€æœ‰æ”¯æŒPnPçš„å†…æ ¸é©±åŠ¨éƒ½å¿…é¡»æä¾›ä¸€ä¸ªAddDeviceè¿‡ç¨‹ï¼Œå¹¶åœ¨DriverEntryä¸­å°†å…¶åœ°å€å­˜å…¥DriverObject->DriverExtension->AddDevice.
 
-AddDeviceµÄÖ÷ÒªÔğÈÎÊ±µ÷ÓÃIoCreateDevice´´½¨Ò»¸öÉè±¸¶ÔÏó£¬È»ºóµ÷ÓÃIoAttachDeviceToDeviceStack½«Ëü¸½¼Óµ½Éè±¸Õ»ÉÏ¡£
+AddDeviceçš„ä¸»è¦è´£ä»»æ—¶è°ƒç”¨IoCreateDeviceåˆ›å»ºä¸€ä¸ªè®¾å¤‡å¯¹è±¡ï¼Œç„¶åè°ƒç”¨IoAttachDeviceToDeviceStackå°†å®ƒé™„åŠ åˆ°è®¾å¤‡æ ˆä¸Šã€‚
 
-ÈçºÎÊµÏÖAddDevice¼û[Writing an AddDevice Routine](https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/writing-an-adddevice-routine)
+å¦‚ä½•å®ç°AddDeviceè§[Writing an AddDevice Routine](https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/writing-an-adddevice-routine)
 
-AddDevice ¹ı³ÌÔËĞĞÔÚPASSIVE_LEVELÉÏ¡£
+AddDevice è¿‡ç¨‹è¿è¡Œåœ¨PASSIVE_LEVELä¸Šã€‚
