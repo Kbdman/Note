@@ -37,3 +37,26 @@ Some **Id** are reservered for specific usaged like:
 + 0x03 for image containing SSBL,it will be loaded by FSBL in external RAM for serial boot: it is a FIP binary with OpenSTLinux 
   
 There are some requirements on **name**  for GPT partitions.The ROM code might use them to identity which partition contains which content, like "fsbl","fsbl1","fip","fip-a"
+
+## build bootfs
+The partition with type *System* will be marked as bootable and used by uboot as the U-boot device.   
+U-boot will read the configuration from some files,like boot.scr.uimg and extlinux.conf, in this partition and boot accordingly.   
+To not deeply dig into this configuration, I would like use the configuration from the ST offical SW,like
+```
+mmc0_extlinux/* #extlinux.conf
+mmc1_extlinux/*
+boot.scr.uimg #seems compiled from bootcmd
+
+``` 
+Commands building the ext4 image
+```
+# create an empty 64MiB image
+dd if=/dev/zero of=bootfs.ext4 bs=4k count=16384
+# create filesystem on this image
+mkfs.ext4 bootfs.ext4
+# mount this image to /mnt
+mount -o loop bootfs.ext4 /mnt
+## copy kernel,dtb and configuration into the fs
+cp ${files} /mnt
+umount /mnt
+```
