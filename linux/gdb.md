@@ -107,4 +107,12 @@ generate-core-file
 + info proc status      
 列出/proc/PID/status下的信息
 
-    
+### Set searching directory for source
+```
+set substitue-path ${old path in symbol} ${real path in host}
+```   
+
+### script
+```
+gdb -x ${script_file}
+```
